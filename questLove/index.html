@@ -14,13 +14,8 @@
             position: relative;
             color: white;
         }
-        .heart-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 0;
-        }
-        .heart-float {
-            position: absolute; font-size: 20px; animation: float 15s infinite; opacity: 0.3;
-        }
+        .heart-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+        .heart-float { position: absolute; font-size: 20px; animation: float 15s infinite; opacity: 0.3; }
         @keyframes float {
             0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
             10%, 90% { opacity: 0.3; }
@@ -33,7 +28,6 @@
         .screen.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ===== ГЛАВНЫЙ ЭКРАН ===== */
         .home-container {
             text-align: center; padding: 40px; max-width: 800px; margin: 0 auto;
             display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;
@@ -75,7 +69,6 @@
         .quest-starter-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
         .quest-starter-btn.hidden { display: none; }
 
-        /* ===== ОБЩИЕ СТИЛИ ЭКРАНОВ ===== */
         .back-btn {
             position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.2); color: white;
             border: 2px solid white; padding: 10px 20px; border-radius: 25px; cursor: pointer;
@@ -86,7 +79,6 @@
         .screen-header h2 { font-size: 2.2em; margin-bottom: 15px; text-shadow: 2px 2px 10px rgba(0,0,0,0.3); }
         .screen-header p { font-size: 1.1em; font-style: italic; opacity: 0.9; }
 
-        /* ===== ГАЛЕРЕЯ ===== */
         .gallery-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px; max-width: 1200px; margin: 0 auto; padding: 20px;
@@ -109,7 +101,6 @@
         .photo-caption .date { font-size: 0.85em; opacity: 0.8; margin-bottom: 5px; }
         .photo-caption .text { font-size: 1em; font-weight: bold; }
 
-        /* ===== КАЛЕНДАРЬ ===== */
         .calendar-container { max-width: 800px; margin: 0 auto; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; border: 1px solid rgba(255,255,255,0.2); }
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .calendar-header h3 { font-size: 1.6em; }
@@ -139,7 +130,6 @@
         .legend-item { display: flex; align-items: center; gap: 5px; }
         .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
 
-        /* ===== МОДАЛЬНЫЕ ОКНА ===== */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center;
@@ -169,7 +159,6 @@
         .modal-nav:hover { background: rgba(255,255,255,0.4); transform: translateY(-50%) scale(1.1); }
         .modal-prev { left: 10px; } .modal-next { right: 10px; }
 
-        /* Стили квеста */
         .quest-title { font-size: 1.6em; margin-bottom: 10px; }
         .quest-subtitle { font-size: 1em; opacity: 0.8; margin-bottom: 25px; }
         .quest-options { display: flex; flex-direction: column; gap: 12px; }
@@ -184,7 +173,6 @@
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
         .quest-progress { margin-top: 20px; font-size: 0.9em; opacity: 0.7; }
 
-        /* Стили модалки календаря */
         .cal-modal-title { font-size: 1.4em; margin-bottom: 20px; }
         .status-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
         .status-btn {
@@ -223,15 +211,12 @@
 <body>
     <div class="heart-bg" id="heartBg"></div>
 
-    <!-- ===== ГЛАВНЫЙ ЭКРАН ===== -->
     <div class="screen active" id="homeScreen">
         <div class="home-container">
             <h1>💖 Любимой бармалейке 💖</h1>
             <div class="typewriter"><span id="text"></span><span class="cursor">|</span></div>
             <button class="firework-btn" onclick="launchFireworks()">🎆 Жмякай для экшена 🎆</button>
-            
             <button class="quest-starter-btn" id="questBtn" onclick="startQuest()">🔑 Пройти квест и открыть сюрприз</button>
-            
             <div class="nav-buttons">
                 <button class="nav-btn locked" id="galleryBtn" onclick="handleLockedBtn('gallery')">
                     <span class="lock-icon">🔒</span> Наши фото
@@ -243,7 +228,6 @@
         </div>
     </div>
 
-    <!-- ===== ЭКРАН ГАЛЕРЕИ ===== -->
     <div class="screen" id="galleryScreen">
         <button class="back-btn" onclick="showScreen('homeScreen')">← Назад</button>
         <div class="screen-header">
@@ -253,7 +237,6 @@
         <div class="gallery-grid" id="galleryGrid"></div>
     </div>
 
-    <!-- ===== ЭКРАН КАЛЕНДАРЯ ===== -->
     <div class="screen" id="calendarScreen">
         <button class="back-btn" onclick="showScreen('homeScreen')">← Назад</button>
         <div class="screen-header">
@@ -276,7 +259,6 @@
         </div>
     </div>
 
-    <!-- ===== МОДАЛЬНОЕ ОКНО ФОТО ===== -->
     <div class="modal" id="photoModal">
         <button class="modal-close" onclick="closePhotoModal()">×</button>
         <div class="modal-content photo-modal-content">
@@ -290,7 +272,6 @@
         <button class="modal-nav modal-next" onclick="navigatePhoto(1)">›</button>
     </div>
 
-    <!-- ===== МОДАЛЬНОЕ ОКНО КВЕСТА ===== -->
     <div class="modal" id="questModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeQuestModal()">×</button>
@@ -301,7 +282,6 @@
         </div>
     </div>
 
-    <!-- ===== МОДАЛЬНОЕ ОКНО КАЛЕНДАРЯ ===== -->
     <div class="modal" id="calendarModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeCalendarModal()">×</button>
@@ -321,9 +301,6 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script type="module">
-        // ==========================================
-        // 🔥 FIREBASE CONFIG (Твои данные) 🔥
-        // ==========================================
         const firebaseConfig = {
           apiKey: "AIzaSyDI-ZfufphWeDTAOvu_CbR1mQGBwM7RJK0",
           authDomain: "our-calendar-167fd.firebaseapp.com",
@@ -334,11 +311,16 @@
           appId: "1:988333134454:web:a5e9d1f0c0be46b3f68557"
         };
 
-        let db = null;
         let isFirebaseActive = false;
+        let db = null;
 
-        // Инициализация Firebase
-        if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
+        // Безопасная инициализация Firebase с fallback на localStorage
+        async function initFirebase() {
+            if (firebaseConfig.apiKey === "YOUR_API_KEY" || !firebaseConfig.apiKey) {
+                console.log("⚠️ Firebase не настроен, используем локальное хранилище.");
+                loadLocalCalendar();
+                return;
+            }
             try {
                 const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
                 const { getDatabase } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js");
@@ -346,12 +328,14 @@
                 db = getDatabase(app);
                 isFirebaseActive = true;
                 console.log("✅ Firebase успешно подключен!");
-            } catch (e) { 
-                console.error("❌ Ошибка подключения Firebase:", e); 
+                listenToFirebase();
+            } catch (error) {
+                console.error("❌ Ошибка подключения Firebase (возможно, открыто через file://):", error);
+                console.log("⚠️ Переключаемся на локальное сохранение (localStorage).");
+                loadLocalCalendar();
             }
         }
 
-        // ===== ДАННЫЕ =====
         const photos = [
             { src: 'photos/2709.JPG', date: '27 сентября', text: 'Романтичный день и знакомство с моей мамой💕' },
             { src: 'photos/1208.jpg', date: '12 августа', text: 'Первый поход в кино 🌊' },
@@ -362,21 +346,9 @@
         ];
 
         const questData = [
-            {
-                question: "Как зовут черепашку, когда она вырастает?",
-                options: ["Очень старой черепахой 🐢", "Черепашка-ниндзя 🥷", "Просто большой черепахой"],
-                correct: 1 
-            },
-            {
-                question: "Что особенного случилось 3 августа?",
-                options: ["Мы просто погуляли", "Мы смотрели Игру Престолов", "Первая фотка и поцелуй ☀️"],
-                correct: 2
-            },
-            {
-                question: "Сколько такс делают меня самым счастливым человеком?",
-                options: ["Одна, но самая любимая ❤️", "Нисколько", "Две, но это уже жадность"],
-                correct: 0
-            }
+            { question: "Как зовут черепашку, когда она вырастает?", options: ["Очень старой черепахой 🐢", "Черепашка-ниндзя 🥷", "Просто большой черепахой"], correct: 1 },
+            { question: "Что особенного случилось 3 августа?", options: ["Мы просто погуляли", "Мы смотрели Игру Престолов", "Первая фотка и поцелуй ☀️"], correct: 2 },
+            { question: "Сколько такс делают меня самым счастливым человеком?", options: ["Одна, но самая любимая ❤️", "Нисколько", "Две, но это уже жадность"], correct: 0 }
         ];
 
         let currentPhotoIndex = 0;
@@ -387,13 +359,13 @@
         let currentQuestStep = 0;
         let isQuestCompleted = localStorage.getItem('questUnlocked') === 'true';
 
-        // ===== ИНИЦИАЛИЗАЦИЯ =====
         window.addEventListener('load', () => {
+            console.log("🚀 Сайт загружается...");
             createFloatingHearts();
             typeWriter();
-            renderGallery();
+            renderGallery(); // Отрисовываем фото в любом случае
             checkQuestStatus();
-            listenToFirebase();
+            initFirebase(); // Пытаемся подключить Firebase, но не блокируем остальное
         });
 
         function checkQuestStatus() {
@@ -406,13 +378,17 @@
         function unlockButtons() {
             const galleryBtn = document.getElementById('galleryBtn');
             const calendarBtn = document.getElementById('calendarBtn');
-            [galleryBtn, calendarBtn].forEach(btn => {
-                btn.classList.remove('locked');
-                btn.innerHTML = btn.innerHTML.replace('🔒', '🔓');
-            });
+            if (galleryBtn) {
+                galleryBtn.classList.remove('locked');
+                galleryBtn.innerHTML = '<span class="lock-icon">🔓</span> Наши фото';
+            }
+            if (calendarBtn) {
+                calendarBtn.classList.remove('locked');
+                calendarBtn.innerHTML = '<span class="lock-icon">🔓</span> Наш календарь';
+            }
+            console.log("🔓 Кнопки разблокированы!");
         }
 
-        // ===== УПРАВЛЕНИЕ ЭКРАНАМИ =====
         window.showScreen = function(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(screenId).classList.add('active');
@@ -429,7 +405,6 @@
             if (type === 'calendar') window.showScreen('calendarScreen');
         };
 
-        // ===== КВЕСТ =====
         window.startQuest = function() {
             currentQuestStep = 0;
             renderQuestStep();
@@ -445,10 +420,8 @@
             document.getElementById('questTitle').textContent = `Вопрос ${currentQuestStep + 1} из ${questData.length}`;
             document.getElementById('questQuestion').textContent = data.question;
             document.getElementById('questProgress').textContent = `Шаг ${currentQuestStep + 1} из ${questData.length}`;
-            
             const optionsContainer = document.getElementById('questOptions');
             optionsContainer.innerHTML = '';
-            
             data.options.forEach((option, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'quest-option';
@@ -480,13 +453,11 @@
             document.getElementById('questQuestion').textContent = "Ты знаешь всё идеально! Сюрприз разблокирован.";
             document.getElementById('questOptions').innerHTML = '<button class="quest-option" onclick="closeQuestModal(); unlockButtons();" style="background: rgba(74, 222, 128, 0.4); border-color: #4ade80; font-weight: bold;">Открыть всё! 🎁</button>';
             document.getElementById('questProgress').textContent = "Поздравляю!";
-            
             localStorage.setItem('questUnlocked', 'true');
             isQuestCompleted = true;
             launchFireworks();
         }
 
-        // ===== ГАЛЕРЕЯ =====
         function renderGallery() {
             const grid = document.getElementById('galleryGrid');
             grid.innerHTML = '';
@@ -495,7 +466,7 @@
                 item.className = 'gallery-item';
                 item.onclick = () => openPhotoModal(index);
                 item.innerHTML = `
-                    <img src="${photo.src}" alt="${photo.text}" onerror="this.src='https://via.placeholder.com/400x400/ff69b4/ffffff?text=Добавь+фото'">
+                    <img src="${photo.src}" alt="${photo.text}" onerror="this.src='https://via.placeholder.com/400x400/ff69b4/ffffff?text=Фото+не+найдено'">
                     <div class="photo-caption">
                         <div class="date">${photo.date}</div>
                         <div class="text">${photo.text}</div>
@@ -531,17 +502,14 @@
             updatePhotoModal();
         };
 
-        // ===== КАЛЕНДАРЬ =====
         const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
 
         function renderCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             document.getElementById('currentMonthYear').textContent = `${monthNames[month]} ${year}`;
-            
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
-            
             const dayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
             dayNames.forEach(day => {
                 const el = document.createElement('div');
@@ -549,25 +517,20 @@
                 el.textContent = day;
                 grid.appendChild(el);
             });
-
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
             const startOffset = firstDay === 0 ? 6 : firstDay - 1;
-
             for (let i = 0; i < startOffset; i++) {
                 const empty = document.createElement('div');
                 empty.className = 'calendar-day empty';
                 grid.appendChild(empty);
             }
-
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const eventData = calendarEvents[dayKey] || {};
-                
                 const dayEl = document.createElement('div');
                 dayEl.className = 'calendar-day';
                 if (eventData.status) dayEl.classList.add(`status-${eventData.status}`);
-                
                 dayEl.innerHTML = `
                     <div class="day-number">${day}</div>
                     ${eventData.status ? `<div class="day-status">${getStatusEmoji(eventData.status)}</div>` : ''}
@@ -594,7 +557,6 @@
             const eventData = calendarEvents[dayKey] || {};
             tempStatus = eventData.status || null;
             document.getElementById('dayNote').value = eventData.note || '';
-            
             document.querySelectorAll('.status-btn').forEach(btn => btn.classList.remove('active'));
             if (tempStatus) {
                 const btns = document.querySelectorAll('.status-btn');
@@ -623,8 +585,10 @@
             if (note) data.note = note;
 
             if (isFirebaseActive) {
-                const { getDatabase, ref, set } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js");
-                await set(ref(getDatabase(), 'events/' + selectedDayKey), data);
+                try {
+                    const { getDatabase, ref, set } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js");
+                    await set(ref(getDatabase(), 'events/' + selectedDayKey), data);
+                } catch(e) { console.error("Ошибка сохранения в Firebase", e); }
             } else {
                 calendarEvents[selectedDayKey] = data;
                 localStorage.setItem('ourCalendarEvents', JSON.stringify(calendarEvents));
@@ -636,8 +600,10 @@
         window.deleteDayData = async function() {
             if (!selectedDayKey) return;
             if (isFirebaseActive) {
-                const { getDatabase, ref, remove } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js");
-                await remove(ref(getDatabase(), 'events/' + selectedDayKey));
+                try {
+                    const { getDatabase, ref, remove } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js");
+                    await remove(ref(getDatabase(), 'events/' + selectedDayKey));
+                } catch(e) { console.error("Ошибка удаления из Firebase", e); }
             } else {
                 delete calendarEvents[selectedDayKey];
                 localStorage.setItem('ourCalendarEvents', JSON.stringify(calendarEvents));
@@ -647,26 +613,23 @@
         };
 
         function listenToFirebase() {
-            if (!isFirebaseActive) {
-                const saved = localStorage.getItem('ourCalendarEvents');
-                if (saved) calendarEvents = JSON.parse(saved);
-                return;
-            }
             import("https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js").then(({ getDatabase, ref, onValue }) => {
                 onValue(ref(getDatabase(), 'events'), (snapshot) => {
                     calendarEvents = snapshot.val() || {};
                     renderCalendar();
                 });
-            });
+            }).catch(e => console.error("Ошибка слушателя Firebase", e));
         }
 
-        // ===== ЭФФЕКТЫ =====
-        const messages = [
-            "Ты и таксы — моё счастье...",
-            "Твои глаза для меня весь мир...",
-            "Люблю тебя, как до луны и обратно...",
-            "Как зовут черепашку, когда она вырастет?.."
-        ];
+        function loadLocalCalendar() {
+            const saved = localStorage.getItem('ourCalendarEvents');
+            if (saved) {
+                calendarEvents = JSON.parse(saved);
+                renderCalendar();
+            }
+        }
+
+        const messages = ["Ты и таксы — моё счастье...", "Твои глаза для меня весь мир...", "Люблю тебя, как до луны и обратно...", "Как зовут черепашку, когда она вырастет?.."];
         let currentMessage = 0, charIndex = 0, isDeleting = false;
         const textElement = document.getElementById('text');
 
@@ -712,7 +675,6 @@
             }
         }
 
-        // Клавиши для фото
         document.addEventListener('keydown', (e) => {
             if (!document.getElementById('photoModal').classList.contains('active')) return;
             if (e.key === 'Escape') window.closePhotoModal();
