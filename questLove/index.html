@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Для моей любимой бармалейки ❤️</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -314,7 +317,6 @@
         let isFirebaseActive = false;
         let db = null;
 
-        // Безопасная инициализация Firebase с fallback на localStorage
         async function initFirebase() {
             if (firebaseConfig.apiKey === "YOUR_API_KEY" || !firebaseConfig.apiKey) {
                 console.log("⚠️ Firebase не настроен, используем локальное хранилище.");
@@ -330,7 +332,7 @@
                 console.log("✅ Firebase успешно подключен!");
                 listenToFirebase();
             } catch (error) {
-                console.error("❌ Ошибка подключения Firebase (возможно, открыто через file://):", error);
+                console.error("❌ Ошибка подключения Firebase:", error);
                 console.log("⚠️ Переключаемся на локальное сохранение (localStorage).");
                 loadLocalCalendar();
             }
@@ -363,14 +365,15 @@
             console.log("🚀 Сайт загружается...");
             createFloatingHearts();
             typeWriter();
-            renderGallery(); // Отрисовываем фото в любом случае
+            renderGallery();
             checkQuestStatus();
-            initFirebase(); // Пытаемся подключить Firebase, но не блокируем остальное
+            initFirebase();
         });
 
         function checkQuestStatus() {
             if (isQuestCompleted) {
-                document.getElementById('questBtn').classList.add('hidden');
+                const btn = document.getElementById('questBtn');
+                if(btn) btn.classList.add('hidden');
                 unlockButtons();
             }
         }
@@ -460,6 +463,7 @@
 
         function renderGallery() {
             const grid = document.getElementById('galleryGrid');
+            if(!grid) return;
             grid.innerHTML = '';
             photos.forEach((photo, index) => {
                 const item = document.createElement('div');
@@ -505,10 +509,11 @@
         const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
 
         function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            if(!grid) return;
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
             document.getElementById('currentMonthYear').textContent = `${monthNames[month]} ${year}`;
-            const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
             const dayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
             dayNames.forEach(day => {
