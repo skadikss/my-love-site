@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Для моей любимой бармалейки ❤️</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            position: relative;
+            color: white;
+        }
+        .heart-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0;
+        }
+        .heart-float {
+            position: absolute; font-size: 20px; animation: float 15s infinite; opacity: 0.3;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10%, 90% { opacity: 0.3; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        .screen {
+            display: none; min-height: 100vh; padding: 40px 20px;
+            position: relative; z-index: 1; animation: fadeIn 0.6s ease-out;
+        }
+        .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ===== ГЛАВНЫЙ ЭКРАН ===== */
+        .home-container {
+            text-align: center; padding: 40px; max-width: 800px; margin: 0 auto;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;
+        }
+        h1 { font-size: 2.8em; margin-bottom: 20px; text-shadow: 2px 2px 10px rgba(0,0,0,0.3); animation: fadeInDown 1s ease-out; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+        .typewriter { font-size: 1.4em; margin: 30px 0; min-height: 100px; text-shadow: 1px 1px 5px rgba(0,0,0,0.3); }
+        .cursor { display: inline-block; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+        
+        .firework-btn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none;
+            padding: 20px 40px; font-size: 1.3em; border-radius: 50px; cursor: pointer; margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.3s ease; font-family: 'Georgia', serif;
+        }
+        .firework-btn:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
+
+        .nav-buttons { margin-top: 40px; display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+        .nav-btn {
+            background: rgba(255,255,255,0.2); color: white; border: 2px solid white; padding: 15px 30px;
+            font-size: 1.1em; border-radius: 30px; cursor: pointer; transition: all 0.3s ease;
+            backdrop-filter: blur(10px); font-family: 'Georgia', serif; position: relative;
+        }
+        .nav-btn:hover { background: white; color: #667eea; transform: translateY(-3px); }
+        
+        .nav-btn.locked {
+            opacity: 0.6; cursor: not-allowed; background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.4);
+        }
+        .nav-btn.locked:hover { transform: none; background: rgba(0,0,0,0.2); color: white; }
+        .lock-icon { margin-right: 8px; }
+
+        .quest-starter-btn {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); color: #4a1d00; border: none;
+            padding: 18px 35px; font-size: 1.2em; border-radius: 50px; cursor: pointer; margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.3s ease; font-family: 'Georgia', serif; font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        .quest-starter-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
+        .quest-starter-btn.hidden { display: none; }
+
+        /* ===== ОБЩИЕ СТИЛИ ЭКРАНОВ ===== */
+        .back-btn {
+            position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.2); color: white;
+            border: 2px solid white; padding: 10px 20px; border-radius: 25px; cursor: pointer;
+            transition: all 0.3s ease; backdrop-filter: blur(10px); font-family: 'Georgia', serif; font-size: 1em; z-index: 10;
+        }
+        .back-btn:hover { background: white; color: #667eea; }
+        .screen-header { text-align: center; margin-bottom: 40px; padding-top: 20px; }
+        .screen-header h2 { font-size: 2.2em; margin-bottom: 15px; text-shadow: 2px 2px 10px rgba(0,0,0,0.3); }
+        .screen-header p { font-size: 1.1em; font-style: italic; opacity: 0.9; }
+
+        /* ===== ГАЛЕРЕЯ ===== */
+        .gallery-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px; max-width: 1200px; margin: 0 auto; padding: 20px;
+        }
+        .gallery-item {
+            position: relative; aspect-ratio: 1; border-radius: 15px; overflow: hidden; cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: all 0.4s ease; animation: photoAppear 0.6s ease-out backwards;
+        }
+        .gallery-item:nth-child(1) { animation-delay: 0.1s; } .gallery-item:nth-child(2) { animation-delay: 0.2s; }
+        .gallery-item:nth-child(3) { animation-delay: 0.3s; } .gallery-item:nth-child(4) { animation-delay: 0.4s; }
+        @keyframes photoAppear { from { opacity: 0; transform: scale(0.8) translateY(30px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .gallery-item:hover { transform: translateY(-10px) scale(1.03); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .gallery-item:hover img { transform: scale(1.1); }
+        .photo-caption {
+            position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white; padding: 30px 15px 15px; transform: translateY(100%); transition: transform 0.4s ease;
+        }
+        .gallery-item:hover .photo-caption { transform: translateY(0); }
+        .photo-caption .date { font-size: 0.85em; opacity: 0.8; margin-bottom: 5px; }
+        .photo-caption .text { font-size: 1em; font-weight: bold; }
+
+        /* ===== КАЛЕНДАРЬ ===== */
+        .calendar-container { max-width: 800px; margin: 0 auto; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; border: 1px solid rgba(255,255,255,0.2); }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .calendar-header h3 { font-size: 1.6em; }
+        .cal-nav-btn {
+            background: rgba(255,255,255,0.2); border: none; color: white; width: 40px; height: 40px;
+            border-radius: 50%; cursor: pointer; font-size: 1.2em; transition: all 0.3s ease;
+        }
+        .cal-nav-btn:hover { background: white; color: #667eea; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+        .day-name { font-weight: bold; padding: 10px; opacity: 0.8; font-size: 0.85em; }
+        .calendar-day {
+            aspect-ratio: 1; background: rgba(255,255,255,0.1); border-radius: 10px; display: flex;
+            flex-direction: column; align-items: center; justify-content: flex-start; padding: 5px;
+            cursor: pointer; transition: all 0.3s ease; position: relative; border: 2px solid transparent;
+        }
+        .calendar-day:hover { background: rgba(255,255,255,0.25); transform: scale(1.05); }
+        .calendar-day.empty { background: transparent; cursor: default; }
+        .calendar-day.empty:hover { transform: none; }
+        .day-number { font-size: 1em; font-weight: bold; margin-bottom: 3px; }
+        .day-status { font-size: 1.1em; margin-top: auto; }
+        .day-note { font-size: 0.6em; opacity: 0.9; text-align: center; word-wrap: break-word; line-height: 1.2; max-height: 40%; overflow: hidden; }
+        .status-free { border-color: #4ade80; background: rgba(74, 222, 128, 0.2); }
+        .status-busy { border-color: #f87171; background: rgba(248, 113, 113, 0.2); }
+        .status-miss { border-color: #c084fc; background: rgba(192, 132, 252, 0.2); }
+        .status-date { border-color: #fbbf24; background: rgba(251, 191, 36, 0.2); }
+        .legend { display: flex; justify-content: center; gap: 15px; margin-top: 20px; flex-wrap: wrap; font-size: 0.85em; }
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .legend-dot { width: 12px; height: 12px; border-radius: 50%; }
+
+        /* ===== МОДАЛЬНЫЕ ОКНА ===== */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center;
+            animation: modalFadeIn 0.3s ease-out; padding: 20px;
+        }
+        .modal.active { display: flex; }
+        @keyframes modalFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 20px;
+            max-width: 500px; width: 100%; position: relative; animation: zoomIn 0.4s ease-out;
+            border: 1px solid rgba(255,255,255,0.3); box-shadow: 0 20px 60px rgba(0,0,0,0.5); text-align: center;
+        }
+        @keyframes zoomIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-close {
+            position: absolute; top: 15px; right: 15px; background: none; border: none; color: white;
+            font-size: 2em; cursor: pointer; transition: transform 0.3s ease;
+        }
+        .modal-close:hover { transform: rotate(90deg) scale(1.2); }
+        
+        .photo-modal-content { background: transparent; box-shadow: none; border: none; }
+        .photo-modal-content img { max-width: 100%; max-height: 70vh; border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+        .modal-nav {
+            position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.2);
+            color: white; border: none; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5em;
+            cursor: pointer; transition: all 0.3s ease; backdrop-filter: blur(10px);
+        }
+        .modal-nav:hover { background: rgba(255,255,255,0.4); transform: translateY(-50%) scale(1.1); }
+        .modal-prev { left: 10px; } .modal-next { right: 10px; }
+
+        /* Стили квеста */
+        .quest-title { font-size: 1.6em; margin-bottom: 10px; }
+        .quest-subtitle { font-size: 1em; opacity: 0.8; margin-bottom: 25px; }
+        .quest-options { display: flex; flex-direction: column; gap: 12px; }
+        .quest-option {
+            padding: 15px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 12px; color: white; font-size: 1.1em; cursor: pointer; transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+        .quest-option:hover { background: rgba(255,255,255,0.3); border-color: white; transform: translateX(5px); }
+        .quest-option.correct { background: rgba(74, 222, 128, 0.4); border-color: #4ade80; }
+        .quest-option.wrong { background: rgba(248, 113, 113, 0.4); border-color: #f87171; animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        .quest-progress { margin-top: 20px; font-size: 0.9em; opacity: 0.7; }
+
+        /* Стили модалки календаря */
+        .cal-modal-title { font-size: 1.4em; margin-bottom: 20px; }
+        .status-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .status-btn {
+            padding: 12px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1);
+            color: white; border-radius: 10px; cursor: pointer; font-size: 0.95em; transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+        .status-btn:hover, .status-btn.active { background: rgba(255,255,255,0.3); border-color: white; }
+        .note-input {
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1); color: white; font-family: 'Georgia', serif; font-size: 1em; margin-bottom: 15px;
+        }
+        .note-input::placeholder { color: rgba(255,255,255,0.6); }
+        .save-btn {
+            width: 100%; padding: 15px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white; border: none; border-radius: 10px; font-size: 1.1em; cursor: pointer;
+            transition: all 0.3s ease; font-family: 'Georgia', serif; font-weight: bold;
+        }
+        .save-btn:hover { transform: translateY(-2px); }
+        .delete-btn {
+            width: 100%; padding: 10px; background: rgba(255,255,255,0.1); color: #f87171; border: 1px solid #f87171;
+            border-radius: 10px; font-size: 0.9em; cursor: pointer; margin-top: 10px; transition: all 0.3s ease;
+        }
+        .delete-btn:hover { background: #f87171; color: white; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; } .typewriter { font-size: 1.1em; } .firework-btn { font-size: 1.1em; padding: 15px 30px; }
+            .screen-header h2 { font-size: 1.6em; }
+            .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+            .calendar-container { padding: 15px; } .calendar-grid { gap: 5px; }
+            .day-name { font-size: 0.7em; padding: 5px; } .day-number { font-size: 0.85em; }
+            .day-note { font-size: 0.5em; } .status-options { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="heart-bg" id="heartBg"></div>
+
+    <!-- ===== ГЛАВНЫЙ ЭКРАН ===== -->
+    <div class="screen active" id="homeScreen">
+        <div class="home-container">
+            <h1>💖 Любимой бармалейке 💖</h1>
+            <div class="typewriter"><span id="text"></span><span class="cursor">|</span></div>
+            <button class="firework-btn" onclick="launchFireworks()">🎆 Жмякай для экшена 🎆</button>
+            
+            <button class="quest-starter-btn" id="questBtn" onclick="startQuest()">🔑 Пройти квест и открыть сюрприз</button>
+            
+            <div class="nav-buttons">
+                <button class="nav-btn locked" id="galleryBtn" onclick="handleLockedBtn('gallery')">
+                    <span class="lock-icon">🔒</span> Наши фото
+                </button>
+                <button class="nav-btn locked" id="calendarBtn" onclick="handleLockedBtn('calendar')">
+                    <span class="lock-icon">🔒</span> Наш календарь
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ЭКРАН ГАЛЕРЕИ ===== -->
+    <div class="screen" id="galleryScreen">
+        <button class="back-btn" onclick="showScreen('homeScreen')">← Назад</button>
+        <div class="screen-header">
+            <h2>💕 Наша история в фотографиях 💕</h2>
+            <p>Каждый момент с тобой — бесценен</p>
+        </div>
+        <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+
+    <!-- ===== ЭКРАН КАЛЕНДАРЯ ===== -->
+    <div class="screen" id="calendarScreen">
+        <button class="back-btn" onclick="showScreen('homeScreen')">← Назад</button>
+        <div class="screen-header">
+            <h2>📅 Наш общий календарь</h2>
+            <p>Планируем время вместе ❤️</p>
+        </div>
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+                <h3 id="currentMonthYear"></h3>
+                <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-dot" style="background: #4ade80;"></div> Свободны 🟢</div>
+                <div class="legend-item"><div class="legend-dot" style="background: #f87171;"></div> Заняты 🔴</div>
+                <div class="legend-item"><div class="legend-dot" style="background: #c084fc;"></div> Скучаю 💔</div>
+                <div class="legend-item"><div class="legend-dot" style="background: #fbbf24;"></div> Свидание 🎉</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО ФОТО ===== -->
+    <div class="modal" id="photoModal">
+        <button class="modal-close" onclick="closePhotoModal()">×</button>
+        <div class="modal-content photo-modal-content">
+            <img id="modalImage" src="" alt="">
+            <div style="margin-top: 20px;">
+                <div id="modalDate" style="opacity: 0.8; font-size: 0.9em;"></div>
+                <div id="modalText" style="font-size: 1.2em; font-weight: bold; margin-top: 5px;"></div>
+            </div>
+        </div>
+        <button class="modal-nav modal-prev" onclick="navigatePhoto(-1)">‹</button>
+        <button class="modal-nav modal-next" onclick="navigatePhoto(1)">›</button>
+    </div>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО КВЕСТА ===== -->
+    <div class="modal" id="questModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeQuestModal()">×</button>
+            <h3 class="quest-title" id="questTitle">Вопрос 1 из 3</h3>
+            <p class="quest-subtitle" id="questQuestion">Текст вопроса</p>
+            <div class="quest-options" id="questOptions"></div>
+            <div class="quest-progress" id="questProgress">Шаг 1 из 3</div>
+        </div>
+    </div>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО КАЛЕНДАРЯ ===== -->
+    <div class="modal" id="calendarModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeCalendarModal()">×</button>
+            <h3 class="cal-modal-title" id="calModalDate"></h3>
+            <div class="status-options">
+                <button class="status-btn" onclick="selectStatus('free')">🟢 Свободны</button>
+                <button class="status-btn" onclick="selectStatus('busy')">🔴 Заняты</button>
+                <button class="status-btn" onclick="selectStatus('miss')">💔 Скучаю</button>
+                <button class="status-btn" onclick="selectStatus('date')">🎉 Свидание</button>
+            </div>
+            <input type="text" class="note-input" id="dayNote" placeholder="Заметка (например: 'Ужин в 19:00')">
+            <button class="save-btn" onclick="saveDayData()">💾 Сохранить</button>
+            <button class="delete-btn" onclick="deleteDayData()">🗑️ Очистить этот день</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script type="module">
+        // ==========================================
+        // 🔥 FIREBASE CONFIG (Твои данные) 🔥
+        // ==========================================
+        const firebaseConfig = {
+          apiKey: "AIzaSyDI-ZfufphWeDTAOvu_CbR1mQGBwM7RJK0",
+          authDomain: "our-calendar-167fd.firebaseapp.com",
+          databaseURL: "https://our-calendar-167fd-default-rtdb.firebaseio.com",
+          projectId: "our-calendar-167fd",
+          storageBucket: "our-calendar-167fd.firebasestorage.app",
+          messagingSenderId: "988333134454",
+          appId: "1:988333134454:web:a5e9d1f0c0be46b3f68557"
+        };
+
+        let db = null;
+        let isFirebaseActive = false;
+
+        // Инициализация Firebase
+        if (firebaseConfig.apiKey && firebaseConfig.apiKey !== "YOUR_API_KEY") {
+            try {
+                const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
+                const { getDatabase } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js");
+                const app = initializeApp(firebaseConfig);
+                db = getDatabase(app);
+                isFirebaseActive = true;
+                console.log("✅ Firebase успешно подключен!");
+            } catch (e) { 
+                console.error("❌ Ошибка подключения Firebase:", e); 
+            }
+        }
+
+        // ===== ДАННЫЕ =====
+        const photos = [
+            { src: 'photos/2709.JPG', date: '27 сентября', text: 'Романтичный день и знакомство с моей мамой💕' },
+            { src: 'photos/1208.jpg', date: '12 августа', text: 'Первый поход в кино 🌊' },
+            { src: 'photos/2409.jpg', date: '24 сентября', text: 'Игра престолов, первый просмотр 🍂' },
+            { src: 'photos/0908.jpg', date: '9 августа', text: 'Наша первая и лучшая ночевка 🎄' },
+            { src: 'photos/1308.jpg', date: '13 августа', text: 'Первые цветочки🌸' },
+            { src: 'photos/0308.jpg', date: '3 августа', text: 'В этот день: первая фотка и поцелуй ☀️' }
+        ];
+
+        const questData = [
+            {
+                question: "Как зовут черепашку, когда она вырастает?",
+                options: ["Очень старой черепахой 🐢", "Черепашка-ниндзя 🥷", "Просто большой черепахой"],
+                correct: 1 
+            },
+            {
+                question: "Что особенного случилось 3 августа?",
+                options: ["Мы просто погуляли", "Мы смотрели Игру Престолов", "Первая фотка и поцелуй ☀️"],
+                correct: 2
+            },
+            {
+                question: "Сколько такс делают меня самым счастливым человеком?",
+                options: ["Одна, но самая любимая ❤️", "Нисколько", "Две, но это уже жадность"],
+                correct: 0
+            }
+        ];
+
+        let currentPhotoIndex = 0;
+        let currentDate = new Date();
+        let calendarEvents = {};
+        let selectedDayKey = null;
+        let tempStatus = null;
+        let currentQuestStep = 0;
+        let isQuestCompleted = localStorage.getItem('questUnlocked') === 'true';
+
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        window.addEventListener('load', () => {
+            createFloatingHearts();
+            typeWriter();
+            renderGallery();
+            checkQuestStatus();
+            listenToFirebase();
+        });
+
+        function checkQuestStatus() {
+            if (isQuestCompleted) {
+                document.getElementById('questBtn').classList.add('hidden');
+                unlockButtons();
+            }
+        }
+
+        function unlockButtons() {
+            const galleryBtn = document.getElementById('galleryBtn');
+            const calendarBtn = document.getElementById('calendarBtn');
+            [galleryBtn, calendarBtn].forEach(btn => {
+                btn.classList.remove('locked');
+                btn.innerHTML = btn.innerHTML.replace('🔒', '🔓');
+            });
+        }
+
+        // ===== УПРАВЛЕНИЕ ЭКРАНАМИ =====
+        window.showScreen = function(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            window.scrollTo(0, 0);
+            if (screenId === 'calendarScreen') renderCalendar();
+        };
+
+        window.handleLockedBtn = function(type) {
+            if (!isQuestCompleted) {
+                alert("🔒 Сначала пройди мини-квест! Нажми на золотую кнопку выше.");
+                return;
+            }
+            if (type === 'gallery') window.showScreen('galleryScreen');
+            if (type === 'calendar') window.showScreen('calendarScreen');
+        };
+
+        // ===== КВЕСТ =====
+        window.startQuest = function() {
+            currentQuestStep = 0;
+            renderQuestStep();
+            document.getElementById('questModal').classList.add('active');
+        };
+
+        window.closeQuestModal = function() {
+            document.getElementById('questModal').classList.remove('active');
+        };
+
+        function renderQuestStep() {
+            const data = questData[currentQuestStep];
+            document.getElementById('questTitle').textContent = `Вопрос ${currentQuestStep + 1} из ${questData.length}`;
+            document.getElementById('questQuestion').textContent = data.question;
+            document.getElementById('questProgress').textContent = `Шаг ${currentQuestStep + 1} из ${questData.length}`;
+            
+            const optionsContainer = document.getElementById('questOptions');
+            optionsContainer.innerHTML = '';
+            
+            data.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'quest-option';
+                btn.textContent = option;
+                btn.onclick = () => handleQuestAnswer(index, data.correct, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleQuestAnswer(selectedIndex, correctIndex, btnElement) {
+            if (selectedIndex === correctIndex) {
+                btnElement.classList.add('correct');
+                setTimeout(() => {
+                    currentQuestStep++;
+                    if (currentQuestStep < questData.length) {
+                        renderQuestStep();
+                    } else {
+                        completeQuest();
+                    }
+                }, 800);
+            } else {
+                btnElement.classList.add('wrong');
+                setTimeout(() => btnElement.classList.remove('wrong'), 500);
+            }
+        }
+
+        function completeQuest() {
+            document.getElementById('questTitle').textContent = "🎉 Квест пройден! 🎉";
+            document.getElementById('questQuestion').textContent = "Ты знаешь всё идеально! Сюрприз разблокирован.";
+            document.getElementById('questOptions').innerHTML = '<button class="quest-option" onclick="closeQuestModal(); unlockButtons();" style="background: rgba(74, 222, 128, 0.4); border-color: #4ade80; font-weight: bold;">Открыть всё! 🎁</button>';
+            document.getElementById('questProgress').textContent = "Поздравляю!";
+            
+            localStorage.setItem('questUnlocked', 'true');
+            isQuestCompleted = true;
+            launchFireworks();
+        }
+
+        // ===== ГАЛЕРЕЯ =====
+        function renderGallery() {
+            const grid = document.getElementById('galleryGrid');
+            grid.innerHTML = '';
+            photos.forEach((photo, index) => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.onclick = () => openPhotoModal(index);
+                item.innerHTML = `
+                    <img src="${photo.src}" alt="${photo.text}" onerror="this.src='https://via.placeholder.com/400x400/ff69b4/ffffff?text=Добавь+фото'">
+                    <div class="photo-caption">
+                        <div class="date">${photo.date}</div>
+                        <div class="text">${photo.text}</div>
+                    </div>
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        window.openPhotoModal = function(index) {
+            currentPhotoIndex = index;
+            updatePhotoModal();
+            document.getElementById('photoModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closePhotoModal = function() {
+            document.getElementById('photoModal').classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        function updatePhotoModal() {
+            const photo = photos[currentPhotoIndex];
+            document.getElementById('modalImage').src = photo.src;
+            document.getElementById('modalDate').textContent = photo.date;
+            document.getElementById('modalText').textContent = photo.text;
+        }
+
+        window.navigatePhoto = function(direction) {
+            currentPhotoIndex += direction;
+            if (currentPhotoIndex < 0) currentPhotoIndex = photos.length - 1;
+            if (currentPhotoIndex >= photos.length) currentPhotoIndex = 0;
+            updatePhotoModal();
+        };
+
+        // ===== КАЛЕНДАРЬ =====
+        const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            document.getElementById('currentMonthYear').textContent = `${monthNames[month]} ${year}`;
+            
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            
+            const dayNames = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+            dayNames.forEach(day => {
+                const el = document.createElement('div');
+                el.className = 'day-name';
+                el.textContent = day;
+                grid.appendChild(el);
+            });
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+
+            for (let i = 0; i < startOffset; i++) {
+                const empty = document.createElement('div');
+                empty.className = 'calendar-day empty';
+                grid.appendChild(empty);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const eventData = calendarEvents[dayKey] || {};
+                
+                const dayEl = document.createElement('div');
+                dayEl.className = 'calendar-day';
+                if (eventData.status) dayEl.classList.add(`status-${eventData.status}`);
+                
+                dayEl.innerHTML = `
+                    <div class="day-number">${day}</div>
+                    ${eventData.status ? `<div class="day-status">${getStatusEmoji(eventData.status)}</div>` : ''}
+                    ${eventData.note ? `<div class="day-note">${eventData.note}</div>` : ''}
+                `;
+                dayEl.onclick = () => openCalendarModal(dayKey, day, monthNames[month], year);
+                grid.appendChild(dayEl);
+            }
+        }
+
+        function getStatusEmoji(status) {
+            const emojis = { free: '🟢', busy: '🔴', miss: '💔', date: '🎉' };
+            return emojis[status] || '';
+        }
+
+        window.changeMonth = function(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            renderCalendar();
+        };
+
+        window.openCalendarModal = function(dayKey, day, monthName, year) {
+            selectedDayKey = dayKey;
+            document.getElementById('calModalDate').textContent = `${day} ${monthName} ${year}`;
+            const eventData = calendarEvents[dayKey] || {};
+            tempStatus = eventData.status || null;
+            document.getElementById('dayNote').value = eventData.note || '';
+            
+            document.querySelectorAll('.status-btn').forEach(btn => btn.classList.remove('active'));
+            if (tempStatus) {
+                const btns = document.querySelectorAll('.status-btn');
+                const statusMap = { free: 0, busy: 1, miss: 2, date: 3 };
+                btns[statusMap[tempStatus]].classList.add('active');
+            }
+            document.getElementById('calendarModal').classList.add('active');
+        };
+
+        window.closeCalendarModal = function() {
+            document.getElementById('calendarModal').classList.remove('active');
+            selectedDayKey = null; tempStatus = null;
+        };
+
+        window.selectStatus = function(status) {
+            tempStatus = status;
+            document.querySelectorAll('.status-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        };
+
+        window.saveDayData = async function() {
+            if (!selectedDayKey) return;
+            const note = document.getElementById('dayNote').value.trim();
+            const data = {};
+            if (tempStatus) data.status = tempStatus;
+            if (note) data.note = note;
+
+            if (isFirebaseActive) {
+                const { getDatabase, ref, set } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js");
+                await set(ref(getDatabase(), 'events/' + selectedDayKey), data);
+            } else {
+                calendarEvents[selectedDayKey] = data;
+                localStorage.setItem('ourCalendarEvents', JSON.stringify(calendarEvents));
+            }
+            renderCalendar();
+            closeCalendarModal();
+        };
+
+        window.deleteDayData = async function() {
+            if (!selectedDayKey) return;
+            if (isFirebaseActive) {
+                const { getDatabase, ref, remove } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js");
+                await remove(ref(getDatabase(), 'events/' + selectedDayKey));
+            } else {
+                delete calendarEvents[selectedDayKey];
+                localStorage.setItem('ourCalendarEvents', JSON.stringify(calendarEvents));
+            }
+            renderCalendar();
+            closeCalendarModal();
+        };
+
+        function listenToFirebase() {
+            if (!isFirebaseActive) {
+                const saved = localStorage.getItem('ourCalendarEvents');
+                if (saved) calendarEvents = JSON.parse(saved);
+                return;
+            }
+            import("https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js").then(({ getDatabase, ref, onValue }) => {
+                onValue(ref(getDatabase(), 'events'), (snapshot) => {
+                    calendarEvents = snapshot.val() || {};
+                    renderCalendar();
+                });
+            });
+        }
+
+        // ===== ЭФФЕКТЫ =====
+        const messages = [
+            "Ты и таксы — моё счастье...",
+            "Твои глаза для меня весь мир...",
+            "Люблю тебя, как до луны и обратно...",
+            "Как зовут черепашку, когда она вырастет?.."
+        ];
+        let currentMessage = 0, charIndex = 0, isDeleting = false;
+        const textElement = document.getElementById('text');
+
+        function typeWriter() {
+            const currentText = messages[currentMessage];
+            if (isDeleting) {
+                textElement.textContent = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                textElement.textContent = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            let typeSpeed = isDeleting ? 50 : 100;
+            if (!isDeleting && charIndex === currentText.length) { typeSpeed = 2000; isDeleting = true; }
+            else if (isDeleting && charIndex === 0) { isDeleting = false; currentMessage = (currentMessage + 1) % messages.length; typeSpeed = 500; }
+            setTimeout(typeWriter, typeSpeed);
+        }
+
+        window.launchFireworks = function() {
+            const duration = 3000, animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+            const interval = setInterval(function() {
+                const timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                const particleCount = 50 * (timeLeft / duration);
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, shapes: ['circle'], colors: ['#ff0000', '#ff69b4', '#ff1493'] });
+                confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+            }, 250);
+        };
+
+        function createFloatingHearts() {
+            const heartBg = document.getElementById('heartBg');
+            const hearts = ['❤️', '💕', '💖', '💗', '💓', '🐶'];
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-float';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 15 + 's';
+                heart.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                heartBg.appendChild(heart);
+            }
+        }
+
+        // Клавиши для фото
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('photoModal').classList.contains('active')) return;
+            if (e.key === 'Escape') window.closePhotoModal();
+            if (e.key === 'ArrowLeft') window.navigatePhoto(-1);
+            if (e.key === 'ArrowRight') window.navigatePhoto(1);
+        });
+        document.getElementById('photoModal').addEventListener('click', (e) => {
+            if (e.target.id === 'photoModal') window.closePhotoModal();
+        });
+    </script>
+</body>
+</html>
